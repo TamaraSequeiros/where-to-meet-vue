@@ -2,6 +2,9 @@
     <GoogleMap class="map"
         :center="center"
         :zoom="zoom"
+        :mapTypeControl="false"
+        :streetViewControl="false"
+        :fullscreenControl="false"
         mapId="WHERE_MAP_ID"
     >
     <Marker v-if="lat" :options="markerOptions" />
@@ -17,11 +20,9 @@ const props = defineProps({ lat: Number, lng: Number })
 const center = { lat: props.lat, lng: props.lng };
 const zoom = 15;
 const markerOptions =  { position: center };
-
 </script>
 
 <style scoped>
-
 /* desktop */
 @media only screen and (min-width: 992px) {
   .map {
@@ -41,5 +42,4 @@ const markerOptions =  { position: center };
     height: 300px;
   }
 }
-
 </style>
