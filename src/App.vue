@@ -57,7 +57,7 @@ async function submit() {
   ready.value = false;
 
   const options = {
-    url: import.meta.env.VITE_PROD_URL + '/where/middle',
+    url: import.meta.env.VITE_WTM_URL + '/where/middle',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -109,9 +109,9 @@ async function submit() {
 @media only screen and (max-width: 767px) {
   .map {
     margin: auto;
-    margin-top: 50px;
-    width: 70%;
-    height: 400px;
+    margin-top: 25px;
+    width: 80%;
+    height: 300px;
   }
 }
 
