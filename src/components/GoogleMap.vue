@@ -3,7 +3,6 @@
         :center="center"
         :zoom="zoom"
         mapId="WHERE_MAP_ID"
-        style="width: 50%; height: 500px"
     >
     <Marker v-if="lat" :options="markerOptions" />
     </GoogleMap>
