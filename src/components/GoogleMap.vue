@@ -1,5 +1,5 @@
 <template>
-    <GoogleMap
+    <GoogleMap class="map"
         :center="center"
         :zoom="zoom"
         mapId="WHERE_MAP_ID"
@@ -22,6 +22,24 @@ const markerOptions =  { position: center };
 
 <style scoped>
 
+/* desktop */
+@media only screen and (min-width: 992px) {
+  .map {
+    margin: auto;
+    margin-top: 50px;
+    width: 60%;
+    height: 600px;
+  }
+}
 
+/* mobile */
+@media only screen and (max-width: 767px) {
+  .map {
+    margin: auto;
+    margin-top: 25px;
+    width: 80%;
+    height: 300px;
+  }
+}
 
 </style>

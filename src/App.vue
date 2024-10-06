@@ -24,9 +24,9 @@
       <el-radio value="route">Midpoint by bike</el-radio>
     </el-radio-group>
     <br/><br/>
-    <button @click="submit">Submit</button>
+    <button @click="submit">Search</button>
   </div>
-  <GoogleMaps class="map" v-if=ready :lat="lat" :lng="lng"/>
+  <GoogleMaps v-if=ready :lat="lat" :lng="lng"/>
 </template>
 
 <script setup lang="ts">
@@ -93,26 +93,6 @@ async function submit() {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-
-/* desktop */
-@media only screen and (min-width: 992px) {
-  .map {
-    margin: auto;
-    margin-top: 50px;
-    width: 70%;
-    height: 600px;
-  }
-}
-
-/* mobile */
-@media only screen and (max-width: 767px) {
-  .map {
-    margin: auto;
-    margin-top: 25px;
-    width: 80%;
-    height: 300px;
-  }
 }
 
 .autocomplete {
