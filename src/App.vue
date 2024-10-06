@@ -27,6 +27,16 @@
     <button @click="submit">Search</button>
   </div>
   <GoogleMaps v-if=ready :lat="lat" :lng="lng"/>
+  <div style="text-align: center;">
+    <div class="results">
+      <h2 v-if=ready>Nearby places</h2>
+      <ul>
+        <li v-for="place in nearby_places">
+          {{ place.displayName.text }} -- Rating: {{ place.rating }}
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +44,18 @@ import { ref } from 'vue';
 import GoogleMaps from './components/GoogleMap.vue';
 import axios from 'axios';
 
+interface Place {
+  displayName: {
+    text: string;
+    languageCode: string;
+  };
+  formattedAddress: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  rating: number;
+}
 
 const address1 = ref<string>('Stationsplein, 1012AB Amsterdam')
 const address2 = ref<string>('Westermarkt 20, 1016GV Amsterdam')
@@ -44,6 +66,8 @@ const method = ref('geographical')
 const ready = ref(false)
 const lat = ref<number>()
 const lng = ref<number>()
+
+const nearby_places = ref<Place[]>([])
 
 async function setPlace1(address: any) {
   address1.value = address.formatted_address;
@@ -56,7 +80,7 @@ async function setPlace2(address: any) {
 async function submit() {
   ready.value = false;
 
-  const options = {
+  const map_options = {
     url: import.meta.env.VITE_WTM_URL + '/where/middle',
     method: 'POST',
     headers: {
@@ -73,10 +97,25 @@ async function submit() {
 
   let response;
   try {
-    response = await axios(options);
+    response = await axios(map_options);
     const middle = response.data.middle_point;
     lat.value = middle.lat;
     lng.value = middle.lng;
+
+    const places_options = {
+      url: import.meta.env.VITE_WTM_URL + '/places/nearby',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        'lat': middle.lat,
+        'lng': middle.lng
+      }
+    }
+    const places_response = await axios(places_options);
+    nearby_places.value = places_response.data.places;
+
     ready.value = true;
   } catch (error) {
     console.log("There was an error");
@@ -109,9 +148,14 @@ async function submit() {
   }
 }
 
-
 .autocomplete {
   width:200px;
+}
+
+.results {
+  margin-top: 30px;
+  display: inline-block;
+  text-align: left;
 }
 </style>
 
