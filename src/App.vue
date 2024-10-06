@@ -57,7 +57,7 @@ async function submit() {
   ready.value = false;
 
   const options = {
-    url: import.meta.env.VITE_LOCAL_URL + '/where/middle',
+    url: import.meta.env.VITE_PROD_URL + '/where/middle',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
