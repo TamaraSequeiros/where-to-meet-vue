@@ -5,6 +5,7 @@
         :mapTypeControl="false"
         :streetViewControl="false"
         :fullscreenControl="false"
+        :controlSize="28"
         mapId="WHERE_MAP_ID"
     >
     <Marker v-if="lat" :options="markerOptions" />
@@ -38,8 +39,8 @@ const markerOptions =  { position: center };
   .map {
     margin: auto;
     margin-top: 25px;
-    width: 80%;
-    height: 300px;
+    width: 85%;
+    height: 350px;
   }
 }
 </style>
