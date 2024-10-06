@@ -1,37 +1,60 @@
 <template>
-    <h2>Search middle</h2>
-    <label for="address1">Address 1: </label>
-    <input type="text" placeholder="" v-model="address1" />
-    <br/><br/>
-    <label for="address2">Address 2: </label>
-    <input type="text" placeholder="" v-model="address2" />
-    <br/><br/>
-      <el-radio-group v-model="method">
-      <el-radio value="geographical">Exact center</el-radio>
-      <el-radio value="route">By bike</el-radio>
-    </el-radio-group>
-    <br/><br/>
-    <button @click="submit">Submit</button>
-    <GoogleMaps class="map" v-if=middle :lat="lat" :lng="lng"/>
+  <h2>Search middle</h2>
+  <label for="address1">Address 1: </label>
+  <GMapAutocomplete class="autocomplete"
+      placeholder="Search for an address"
+      @place_changed="setPlace1"
+      :options="{
+            componentRestrictions: { country: 'nl' }
+      }"
+  />
+  <br/><br/>
+  <label for="address2">Address 2: </label>
+  <GMapAutocomplete class="autocomplete"
+      placeholder="Search for an address"
+      @place_changed="setPlace2"
+      :options="{
+            componentRestrictions: { country: 'nl' }
+      }"
+  />
+  <br/><br/>
+    <el-radio-group v-model="method">
+    <el-radio value="geographical">Geographical center</el-radio>
+    <el-radio value="route">Midpoint by bike</el-radio>
+  </el-radio-group>
+  <br/><br/>
+  <button @click="submit">Submit</button>
+  <GoogleMaps class="map" v-if=ready :lat="lat" :lng="lng"/>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import GoogleMaps from './components/GoogleMap.vue'
-const axios = require('axios');
+import GoogleMaps from './components/GoogleMap.vue';
+import axios from 'axios';
 
-const address1 = ref('Stationsplein, 1012AB Amsterdam')
-const address2 = ref('Westermarkt 20, 1016GV Amsterdam')
+// const address1 = ref<string>('Stationsplein, 1012AB Amsterdam')
+// const address2 = ref<string>('Westermarkt 20, 1016GV Amsterdam')
+const address1 = ref<string>('')
+const address2 = ref<string>('')
 const method = ref('geographical')
 
-let middle = ref(undefined)
-let lat = ref(undefined)
-let lng = ref(undefined)
+const ready = ref(false)
+const lat = ref<number>()
+const lng = ref<number>()
+
+async function setPlace1(address: any) {
+  address1.value = address.formatted_address;
+}
+
+async function setPlace2(address: any) {
+  address2.value = address.formatted_address;
+}
 
 async function submit() {
-  console.log( method.value )
+  ready.value = false;
+
   const options = {
-    url: 'http://localhost:3000/where/middle',
+    url: import.meta.env.VITE_PROD_URL + '/where/middle',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -44,17 +67,18 @@ async function submit() {
       ]
     }
   }
-  console.log( options.data )
 
   let response;
   try {
     response = await axios(options);
-    middle.value = response.data.middle_point;
-    lat.value = middle.value.lat;
-    lng.value = middle.value.lng;
+
+    const middle = response.data.middle_point;
+    lat.value = middle.lat;
+    lng.value = middle.lng;
+    ready.value = true;
   } catch (error) {
-    console.log(error)
-    middle.value = error.message;
+    console.log("There was an error");
+    console.log(error);
   }
 }
 </script>
@@ -74,6 +98,10 @@ async function submit() {
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.autocomplete {
+  width:200px;
 }
 </style>
 
