@@ -56,7 +56,7 @@ const googleMapRef = ref();
 async function fitMarkerBounds() {
   const googleMapInstance = await googleMapRef.value.$mapPromise;
 
-  const bounds = new window.google.maps.LatLngBounds();
+  const bounds = new (window as any).google.maps.LatLngBounds();
   bounds.extend(props.middle);
   props.nearbyVenues.forEach((marker) => {
     bounds.extend(marker.options.position);
