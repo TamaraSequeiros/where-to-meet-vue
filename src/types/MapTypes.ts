@@ -7,7 +7,7 @@ export type Venue = {
     displayName: string;
     formattedAddress: string;
     primaryTypeDisplayName: string;
-    rating?: number;
+    rating: number;
     priceLevel?: string;
     googleMapsUri: string;
 }

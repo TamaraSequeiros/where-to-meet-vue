@@ -1,11 +1,11 @@
 <template>
-    <GMapMap class="map" mapId="WHERE_MAP_ID" :center="center" :zoom="zoom" :options="{
+    <GMapMap ref="googleMapRef" class="map" mapId="WHERE_MAP_ID" :options="{
         controlSize: 28,
         zoomControl: true,
         mapTypeControl: false, scaleControl: false, streetViewControl: false, rotateControl: false, fullscreenControl: false
         }">
         <GMapMarker :options="middleMarker.options" :icon="{ url: centerMarker, scaledSize: { height: 35, width: 40}}"/>
-        <GMapMarker v-for="place in nearbyVenues" :options="place.options"
+        <GMapMarker v-for="place in props.nearbyVenues" :options="place.options"
             @click="openMarker(place.venueInfo?.displayName)">
             <GMapInfoWindow class="info" @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
                 :options="{
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import type { Coordinate, MarkerOptions } from '../types/MapTypes.ts';
 import centerMarker from '/src/assets/mark.png';
 
@@ -39,16 +39,11 @@ const props = defineProps<{
     nearbyVenues: MarkerOptions[]
 }>()
 
-const center = props.middle;
-const zoom = 17;
-
 const middleMarker = {
-    options: { position: center, clickable: false }
+    options: { position: props.middle, clickable: false }
 }
 
-const nearbyVenues = props.nearbyVenues;
-
-const openedMarkerID = ref<string | null>(null)
+const openedMarkerID = ref()
 function openMarker(id: string | null) {
     if (openedMarkerID.value == id) {
         openedMarkerID.value = null;
@@ -56,6 +51,21 @@ function openMarker(id: string | null) {
         openedMarkerID.value = id
     }
 }
+
+const googleMapRef = ref();
+async function fitMarkerBounds() {
+  const googleMapInstance = await googleMapRef.value.$mapPromise;
+
+  const bounds = new window.google.maps.LatLngBounds();
+  bounds.extend(props.middle);
+  props.nearbyVenues.forEach((marker) => {
+    bounds.extend(marker.options.position);
+  });
+
+  googleMapInstance.fitBounds(bounds);
+}
+
+onMounted(fitMarkerBounds);
 
 </script>
 
