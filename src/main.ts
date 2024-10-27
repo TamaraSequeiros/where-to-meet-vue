@@ -4,7 +4,7 @@ import App from './App.vue'
 // UI component library
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-// Maps
+// GMaps
 import VueGoogleMaps from 'vue-google-maps-community-fork'
 
 const app = createApp(App)
