@@ -35,14 +35,13 @@ import { ref } from 'vue';
 import type { Coordinate } from '../types/MapTypes.ts';
 import axios from 'axios';
 
-const middle = ref<Coordinate>({ 'lat': 52.37697195, 'lng': 4.89148535 })
+const middle = ref<Coordinate>()
 
 const address1 = ref<string>('')
 const address2 = ref<string>('')
 const method = ref('geographical')
 
 async function setPlace1(address: any) {
-    console.log(address)
     address1.value = address.formatted_address;
 }
 
