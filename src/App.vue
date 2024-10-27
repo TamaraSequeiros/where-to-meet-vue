@@ -1,19 +1,83 @@
 <template>
   <h2>Let's find the middle!</h2>
-  <AddressInput @coords="displayMap"/>
-  <GoogleMaps v-if=middle :lat="middle.lat" :lng="middle.lng"/>
+  <AddressInput @origins="displayMap"/>
+  <GoogleMaps v-if="mapReady" :middle="middle" :nearbyVenues="nearbyVenues" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Coordinate } from './types/MapTypes.ts';
+import type { Coordinate, MarkerOptions } from './types/MapTypes.ts';
 import GoogleMaps from './components/GoogleMap.vue';
 import AddressInput from './components/AddressInput.vue';
+import axios from 'axios';
 
-const middle = ref<Coordinate>()
+const mapReady = ref<boolean>(false)
+const middle = ref<Coordinate>({lat: 0, lng: 0})
+const nearbyVenues = ref<MarkerOptions[]>([])
 
-function displayMap(coord: Coordinate) {
+async function displayMap(method: string, address1: string, address2: string) {
+  mapReady.value = false;
+  const coord = await findMiddle(method, address1, address2)
+  searchNearbyPlaces(coord);
   middle.value = coord;
+  mapReady.value = true;
+}
+
+async function findMiddle(method: string, address1: string, address2: string) {
+    const address_data = {
+        url: import.meta.env.VITE_WTM_URL + '/where/middle',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            'method': method,
+            'addresses': [
+                address1,
+                address2
+            ]
+        }
+    }
+
+    try {
+        const response = await axios(address_data);
+        return response.data.middle_point;
+    } catch (error) {
+        console.log("There was an error");
+        console.log(error);
+    }
+}
+
+async function searchNearbyPlaces(coord: Coordinate) {
+    try {
+        const placesOptions = {
+            url: import.meta.env.VITE_WTM_URL + '/places/nearby',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                'lat': coord.lat,
+                'lng': coord.lng
+            }
+        }
+        const placesResponse = await axios(placesOptions);
+        for (var venue of placesResponse.data.places) {
+            let venueMarker = {
+                options: { 
+                    position: { lat: 0, lng: 0 }
+                },
+                venueInfo: { displayName: '', googleMapsUri: '', formattedAddress: '', rating: 0, priceLevel: undefined }
+            };
+            venueMarker.options.position = { lat: venue.location.latitude, lng: venue.location.longitude };
+            venueMarker.venueInfo = venue;
+            nearbyVenues.value.push(venueMarker);
+        }
+
+    } catch (error) {
+        console.log("There was an error");
+        console.log(error);
+    }
 }
 
 </script>

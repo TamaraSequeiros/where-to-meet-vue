@@ -24,50 +24,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { MarkerOptions } from '../types/MapTypes.ts';
-import axios from 'axios';
+import type { Coordinate, MarkerOptions } from '../types/MapTypes.ts';
 
-const props = defineProps({ lat: Number, lng: Number })
+const props = defineProps<{
+    middle: Coordinate
+    nearbyVenues: MarkerOptions[]
+}>()
 
-const center = props;
+const center = props.middle;
 const zoom = 17;
 
-const nearbyVenues = ref<MarkerOptions[]>([])
-
-async function searchPlaces() {
-    try {
-        const placesOptions = {
-            url: import.meta.env.VITE_WTM_URL + '/places/nearby',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                'lat': props.lat,
-                'lng': props.lng
-            }
-        }
-        const placesResponse = await axios(placesOptions);
-        for (var venue of placesResponse.data.places) {
-            let venueMarker = {
-                options: { 
-                    position: { lat: 0, lng: 0 }
-                },
-                venueInfo: { displayName: '', googleMapsUri: '', formattedAddress: '', rating: 0, priceLevel: undefined }
-            };
-            venueMarker.options.position = { lat: venue.location.latitude, lng: venue.location.longitude };
-            venueMarker.venueInfo = venue;
-            nearbyVenues.value.push(venueMarker);
-        }
-
-    } catch (error) {
-        console.log("There was an error");
-        console.log(error);
-    }
-}
-
-searchPlaces()
-
+const nearbyVenues = props.nearbyVenues;
 
 const openedMarkerID = ref<string | null>(null)
 function openMarker(id: string | null) {
