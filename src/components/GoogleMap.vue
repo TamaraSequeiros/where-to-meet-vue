@@ -4,7 +4,6 @@
         zoomControl: true,
         mapTypeControl: false, scaleControl: false, streetViewControl: false, rotateControl: false, fullscreenControl: false
         }">
-        <!-- <GMapMarker v-if="lat" :options="middleMarker.options" /> -->
         <GMapMarker v-for="place in nearbyVenues" :options="place.options"
             @click="openMarker(place.venueInfo?.displayName)">
             <GMapInfoWindow @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
@@ -33,9 +32,7 @@ const props = defineProps({ lat: Number, lng: Number })
 
 const center = props;
 const zoom = 17;
-const middleMarker = {
-    options: { position: center }
-};
+
 const nearbyVenues = ref<MarkerOptions[]>([])
 
 async function searchPlaces() {
