@@ -8,6 +8,7 @@ export type Venue = {
     formattedAddress: string;
     rating: number;
     priceLevel?: string;
+    googleMapsUri: string;
 }
 
 export type MarkerOptions = {

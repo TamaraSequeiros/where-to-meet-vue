@@ -1,5 +1,5 @@
 <template>
-    <GMapMap class="map" mapId="WHERE_MAP_ID" :api-key="api_key" :center="center" :zoom="zoom" :options="{
+    <GMapMap class="map" mapId="WHERE_MAP_ID" :center="center" :zoom="zoom" :options="{
         controlSize: 28,
         zoomControl: true,
         mapTypeControl: false, scaleControl: false, streetViewControl: false, rotateControl: false, fullscreenControl: false
@@ -13,6 +13,7 @@
                     headerDisabled: true
                 }">
                 <h2>{{ place.venueInfo?.displayName }}</h2>
+                <p><a :href=place.venueInfo?.googleMapsUri target="_blank">View on Google Maps</a></p>
                 <p>{{ place.venueInfo?.formattedAddress }}</p>
                 <p>Rating: {{ place.venueInfo?.rating }}</p>
                 <p v-if="place.venueInfo?.priceLevel">Price: {{ place.venueInfo?.priceLevel }}</p>
@@ -25,8 +26,6 @@
 import { ref } from 'vue';
 import type { MarkerOptions } from '../types/MapTypes.ts';
 import axios from 'axios';
-
-const api_key = import.meta.env.VITE_GOOGLE_API_KEY;
 
 const props = defineProps({ lat: Number, lng: Number })
 
