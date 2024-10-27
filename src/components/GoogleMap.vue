@@ -7,26 +7,32 @@
         <GMapMarker :options="middleMarker.options" :icon="{ url: centerMarker, scaledSize: { height: 35, width: 40}}"/>
         <GMapMarker v-for="place in nearbyVenues" :options="place.options"
             @click="openMarker(place.venueInfo?.displayName)">
-            <GMapInfoWindow @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
+            <GMapInfoWindow class="info" @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
                 :options="{
                     maxWidth: 320,
                     maxHeight: 320,
                     headerDisabled: true
                 }">
-                <h2>{{ place.venueInfo?.displayName }}</h2>
-                <p><a :href=place.venueInfo?.googleMapsUri target="_blank">View on Google Maps</a></p>
-                <p>{{ place.venueInfo?.formattedAddress }}</p>
-                <p>Rating: {{ place.venueInfo?.rating }}</p>
-                <p v-if="place.venueInfo?.priceLevel">Price: {{ place.venueInfo?.priceLevel }}</p>
+                <h3>{{ place.venueInfo?.displayName }}</h3>
+                <p><a :href=place.venueInfo?.googleMapsUri target="_blank">{{ place.venueInfo?.formattedAddress }}</a></p>
+                <p class="venueType" v-if="place.venueInfo?.priceLevel">{{ place.venueInfo?.primaryTypeDisplayName }} — {{ place.venueInfo?.priceLevel }}</p>
+                <p class="venueType" v-else>{{ place.venueInfo?.primaryTypeDisplayName }}</p>
+                <el-rate v-if="place.venueInfo?.rating"
+                    v-model="place.venueInfo.rating"
+                    disabled
+                    show-score
+                    text-color="#ff9900"
+                    score-template="{value}"
+                />
             </GMapInfoWindow>
         </GMapMarker>
     </GMapMap>
 </template>
 
 <script setup lang="ts">
-import centerMarker from '/src/assets/mark.png';
 import { ref } from 'vue';
 import type { Coordinate, MarkerOptions } from '../types/MapTypes.ts';
+import centerMarker from '/src/assets/mark.png';
 
 const props = defineProps<{
     middle: Coordinate
@@ -72,5 +78,11 @@ function openMarker(id: string | null) {
         width: 85%;
         height: 350px;
     }
+}
+
+.venueType {
+    font-family: Arial;
+    text-align: center;
+    margin: 6px;
 }
 </style>

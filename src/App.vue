@@ -65,10 +65,13 @@ async function searchNearbyPlaces(coord: Coordinate) {
         const placesResponse = await axios(placesOptions);
         for (var venue of placesResponse.data.places) {
             let venueMarker = {
-                options: { 
+                options: {
                     position: { lat: 0, lng: 0 }
                 },
-                venueInfo: { displayName: '', googleMapsUri: '', formattedAddress: '', rating: 0, priceLevel: undefined }
+                venueInfo: {
+                    displayName: '', googleMapsUri: '', primaryTypeDisplayName: '',
+                    formattedAddress: '', rating: undefined, priceLevel: undefined
+                }
             };
             venueMarker.options.position = { lat: venue.location.latitude, lng: venue.location.longitude };
             venueMarker.venueInfo = venue;
@@ -105,16 +108,6 @@ async function searchNearbyPlaces(coord: Coordinate) {
     text-align: center;
     color: #2c3e50;
   }
-}
-
-.autocomplete {
-  width:200px;
-}
-
-.results {
-  margin-top: 30px;
-  display: inline-block;
-  text-align: left;
 }
 </style>
 

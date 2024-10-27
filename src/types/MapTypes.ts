@@ -6,7 +6,8 @@ export type Coordinate = {
 export type Venue = {
     displayName: string;
     formattedAddress: string;
-    rating: number;
+    primaryTypeDisplayName: string;
+    rating?: number;
     priceLevel?: string;
     googleMapsUri: string;
 }
