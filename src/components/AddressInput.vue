@@ -33,10 +33,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const address1 = ref<string>('Zeeburgerkade 910, Amsterdam, Netherlands')
-const address2 = ref<string>('Rokin 21, Amsterdam, Netherlands')
-// const address1 = ref<string>('')
-// const address2 = ref<string>('')
+const address1 = ref<string>('')
+const address2 = ref<string>('')
 const method = ref('geographical')
 
 function setPlace1(address: any) {

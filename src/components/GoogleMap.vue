@@ -4,6 +4,7 @@
         zoomControl: true,
         mapTypeControl: false, scaleControl: false, streetViewControl: false, rotateControl: false, fullscreenControl: false
         }">
+        <GMapMarker :options="middleMarker.options" :icon="{ url: '/src/assets/mark.png', scaledSize: { height: 35, width: 40}}"/>
         <GMapMarker v-for="place in nearbyVenues" :options="place.options"
             @click="openMarker(place.venueInfo?.displayName)">
             <GMapInfoWindow @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
@@ -33,6 +34,10 @@ const props = defineProps<{
 
 const center = props.middle;
 const zoom = 17;
+
+const middleMarker = {
+    options: { position: center }
+}
 
 const nearbyVenues = props.nearbyVenues;
 

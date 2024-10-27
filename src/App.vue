@@ -17,9 +17,9 @@ const nearbyVenues = ref<MarkerOptions[]>([])
 
 async function displayMap(method: string, address1: string, address2: string) {
   mapReady.value = false;
-  const coord = await findMiddle(method, address1, address2)
-  searchNearbyPlaces(coord);
+  const coord = await findMiddle(method, address1, address2);
   middle.value = coord;
+  nearbyVenues.value = await searchNearbyPlaces(coord);
   mapReady.value = true;
 }
 
@@ -49,8 +49,8 @@ async function findMiddle(method: string, address1: string, address2: string) {
 }
 
 async function searchNearbyPlaces(coord: Coordinate) {
-    try {
-        const placesOptions = {
+    let venues = [];
+    const placesOptions = {
             url: import.meta.env.VITE_WTM_URL + '/places/nearby',
             method: 'POST',
             headers: {
@@ -61,6 +61,7 @@ async function searchNearbyPlaces(coord: Coordinate) {
                 'lng': coord.lng
             }
         }
+    try {
         const placesResponse = await axios(placesOptions);
         for (var venue of placesResponse.data.places) {
             let venueMarker = {
@@ -71,13 +72,13 @@ async function searchNearbyPlaces(coord: Coordinate) {
             };
             venueMarker.options.position = { lat: venue.location.latitude, lng: venue.location.longitude };
             venueMarker.venueInfo = venue;
-            nearbyVenues.value.push(venueMarker);
+            venues.push(venueMarker);
         }
-
     } catch (error) {
         console.log("There was an error");
         console.log(error);
     }
+    return venues;
 }
 
 </script>
