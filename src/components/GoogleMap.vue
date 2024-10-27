@@ -4,7 +4,7 @@
         zoomControl: true,
         mapTypeControl: false, scaleControl: false, streetViewControl: false, rotateControl: false, fullscreenControl: false
         }">
-        <GMapMarker :options="middleMarker.options" :icon="{ url: '/src/assets/mark.png', scaledSize: { height: 35, width: 40}}"/>
+        <GMapMarker :options="middleMarker.options" :icon="{ url: centerMarker, scaledSize: { height: 35, width: 40}}"/>
         <GMapMarker v-for="place in nearbyVenues" :options="place.options"
             @click="openMarker(place.venueInfo?.displayName)">
             <GMapInfoWindow @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import centerMarker from '/src/assets/mark.png';
 import { ref } from 'vue';
 import type { Coordinate, MarkerOptions } from '../types/MapTypes.ts';
 
@@ -36,7 +37,7 @@ const center = props.middle;
 const zoom = 17;
 
 const middleMarker = {
-    options: { position: center }
+    options: { position: center, clickable: false }
 }
 
 const nearbyVenues = props.nearbyVenues;
