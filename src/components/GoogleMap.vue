@@ -53,7 +53,7 @@ async function searchPlaces() {
                 options: { 
                     position: { lat: 0, lng: 0 }
                 },
-                venueInfo: { displayName: '', formattedAddress: '', rating: 0, priceLevel: undefined }
+                venueInfo: { displayName: '', googleMapsUri: '', formattedAddress: '', rating: 0, priceLevel: undefined }
             };
             venueMarker.options.position = { lat: venue.location.latitude, lng: venue.location.longitude };
             venueMarker.venueInfo = venue;
