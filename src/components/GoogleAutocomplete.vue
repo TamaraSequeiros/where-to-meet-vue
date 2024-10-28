@@ -22,7 +22,6 @@ const emit = defineEmits(['selectPlace'])
 function setPlace(address: any) {
     let selection = '';
     if (address.name != '') {
-        console.log(address.geometry.location)
         selection = address.formatted_address;
     }
     emit('selectPlace', selection)

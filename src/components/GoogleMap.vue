@@ -9,9 +9,7 @@
             @click="openMarker(place.venueInfo?.displayName)">
             <GMapInfoWindow class="info" @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
                 :options="{
-                    maxWidth: 320,
-                    maxHeight: 320,
-                    headerDisabled: true
+                    headerDisabled: false
                 }">
                 <h3>{{ place.venueInfo?.displayName }}</h3>
                 <p><a :href=place.venueInfo?.googleMapsUri target="_blank">{{ place.venueInfo?.formattedAddress }}</a></p>
