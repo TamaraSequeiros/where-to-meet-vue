@@ -1,15 +1,23 @@
 <template>
-    <GMapMap ref="googleMapRef" class="map" mapId="WHERE_MAP_ID" :options="{
+    <GMapMap ref="googleMapRef" class="map" mapId="WHERE_MAP_ID" @click="openMarker(null)" :options="{
         controlSize: 28,
         zoomControl: true,
         mapTypeControl: false, scaleControl: false, streetViewControl: false, rotateControl: false, fullscreenControl: false
         }">
-        <GMapMarker :options="middleMarker.options" :icon="{ url: centerMarker, scaledSize: { height: 35, width: 40}}"/>
+        <GMapMarker @click="openMarker('middle')"
+        :options="middleMarker.options" :icon="{ url: centerMarker, scaledSize: { height: 50, width: 50}}">
+            <GMapInfoWindow class="info" @closeclick="openMarker(null)" :opened="openedMarkerID === 'middle'"
+                :options="{
+                    headerDisabled: true
+                }">
+                <h3 class="venueType">Here is the middle</h3>
+            </GMapInfoWindow>
+        </GMapMarker>
         <GMapMarker v-for="place in props.nearbyVenues" :options="place.options"
             @click="openMarker(place.venueInfo?.displayName)">
             <GMapInfoWindow class="info" @closeclick="openMarker(null)" :opened="openedMarkerID === place.venueInfo?.displayName"
                 :options="{
-                    headerDisabled: false
+                    headerDisabled: true
                 }">
                 <h3>{{ place.venueInfo?.displayName }}</h3>
                 <p><a :href=place.venueInfo?.googleMapsUri target="_blank">{{ place.venueInfo?.formattedAddress }}</a></p>
@@ -30,7 +38,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import type { Coordinate, MarkerOptions } from '../types/MapTypes.ts';
-import centerMarker from '/src/assets/mark.png';
+import centerMarker from '/src/assets/middle.png';
 
 const props = defineProps<{
     middle: Coordinate
@@ -38,10 +46,10 @@ const props = defineProps<{
 }>()
 
 const middleMarker = {
-    options: { position: props.middle, clickable: false }
+    options: { position: props.middle, clickable: true }
 }
 
-const openedMarkerID = ref()
+const openedMarkerID = ref<string|null>('middle')
 function openMarker(id: string | null) {
     if (openedMarkerID.value == id) {
         openedMarkerID.value = null;
@@ -90,7 +98,6 @@ onMounted(fitMarkerBounds);
 
 .venueType {
     font-family: Arial;
-    text-align: center;
     margin: 6px;
 }
 </style>
