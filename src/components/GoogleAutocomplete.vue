@@ -1,7 +1,7 @@
 <template>
-    <label>{{ label }}:
+    <label>
         <GMapAutocomplete class="autocomplete"
-            placeholder="Search for an address"
+            :placeholder=label
             @place_changed="setPlace"
             :options="{
                 componentRestrictions: { country: 'nl' }
@@ -32,6 +32,7 @@ function setPlace(address: any) {
 
 <style scoped>
 .autocomplete {
-  width:200px;
+  width:250px;
+  height:20px;
 }
 </style>
