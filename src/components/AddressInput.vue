@@ -9,7 +9,7 @@
         <el-radio value="route">Midpoint by bike</el-radio>
         </el-radio-group>
         <br/><br/>
-        <button :disabled="!noData()" @click="$emit('origins', method, address1, address2)">Search</button>
+        <el-button :disabled="!noData()" @click="$emit('origins', method, address1, address2)"type="primary">Search</el-button>
     </div>
 </template>
 

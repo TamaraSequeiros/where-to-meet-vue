@@ -31,8 +31,19 @@ function setPlace(address: any) {
 
 
 <style scoped>
-.autocomplete {
-  width:250px;
-  height:20px;
+/* desktop */
+@media only screen and (min-width: 992px) {
+    .autocomplete {
+        width:200px;
+        height:20px;
+    }
+}
+
+/* mobile */
+@media only screen and (max-width: 767px) {
+    .autocomplete {
+        width:310px;
+        height:30px;
+    }
 }
 </style>
